@@ -1,0 +1,13 @@
+{
+    "target_overrides": {
+        "*": {
+             "platform.stdio-convert-newlines": true,
+             "target.extra_labels_add": ["PSA"],
+             "target.components_remove": ["SD"]
+        }
+    },
+    "macros": [
+        "MBEDTLS_USER_CONFIG_FILE=\"mbedtls_user_config.h\""
+    ]
+}
+
