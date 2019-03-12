@@ -39,7 +39,7 @@
         if((actual) != (expected))                                            \
         {                                                                     \
             mbedtls_printf( "\tassertion failed at %s:%d - "                  \
-                            "actual:%" PRId32 "expected:%" PRId32 "\n",     \
+                            "actual:%" PRId32 "expected:%" PRId32 "\n",       \
                             __FILE__, __LINE__,                               \
                             (psa_status_t) actual, (psa_status_t) expected ); \
             goto exit;                                                        \
@@ -47,12 +47,7 @@
     } while (0)
 
 #if !defined(MBEDTLS_PSA_CRYPTO_C)
-int main(void)
-{
-    mbedtls_printf("Not all of the required options are defined:\n"
-                   "  - MBEDTLS_PSA_CRYPTO_C\n");
-    return 0;
-}
+    #error "Not all of the required options are defined: Missing MBEDTLS_PSA_CRYPTO_C"
 #else
 
 #define PSA_ATTESTATION_PRIVATE_KEY_ID 17
@@ -120,8 +115,9 @@ static psa_status_t check_initial_attestation_get_token()
     ASSERT_STATUS(attest_err, PSA_ATTEST_ERR_SUCCESS);
 
 exit:
-    if(attest_err != PSA_ATTEST_ERR_SUCCESS)
+    if (attest_err != PSA_ATTEST_ERR_SUCCESS) {
         return attest_err;
+    }
     return status;
 }
 
@@ -170,7 +166,7 @@ int main(void)
     psa_key_handle_t handle = 0;
 
     fake_set_initial_nvseed();
-    
+
     attestation_example();
 
     psa_open_key(PSA_KEY_LIFETIME_PERSISTENT, key_id, &handle);
