@@ -47,7 +47,7 @@
     } while (0)
 
 #if !defined(MBEDTLS_PSA_CRYPTO_C)
-    #error "Not all of the required options are defined: Missing MBEDTLS_PSA_CRYPTO_C"
+    #error "Not all of the required options are defined: Missing MBEDTLS_PSA_CRYPTO_C."
 #else
 
 #define PSA_ATTESTATION_PRIVATE_KEY_ID 17
