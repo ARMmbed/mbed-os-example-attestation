@@ -14,11 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef __STDC_FORMAT_MACROS
-#define __STDC_FORMAT_MACROS
-#endif
 
-#include "psa_initial_attestation_api.h"
+ #include "psa_initial_attestation_api.h"
 #include "psa_attest_inject_key.h"
 #include <stdlib.h>
 #include <string.h>
@@ -26,30 +23,12 @@
 #include "entropy.h"
 #include "entropy_poll.h"
 
-#if defined(MBEDTLS_PLATFORM_C)
-#include "mbedtls/platform.h"
-#else
 #include <stdio.h>
-#define mbedtls_printf printf
-#endif
-
-#define ASSERT_STATUS(actual, expected)                                       \
-    do                                                                        \
-    {                                                                         \
-        if((actual) != (expected))                                            \
-        {                                                                     \
-            mbedtls_printf( "\tassertion failed at %s:%d - "                  \
-                            "actual:%" PRId32 "expected:%" PRId32 "\n",     \
-                            __FILE__, __LINE__,                               \
-                            (psa_status_t) actual, (psa_status_t) expected ); \
-            goto exit;                                                        \
-        }                                                                     \
-    } while (0)
 
 #if !defined(MBEDTLS_PSA_CRYPTO_C)
 int main(void)
 {
-    mbedtls_printf("Not all of the required options are defined:\n"
+    printf("Not all of the required options are defined:\n"
                    "  - MBEDTLS_PSA_CRYPTO_C\n");
     return 0;
 }
@@ -97,7 +76,6 @@ static psa_status_t check_initial_attestation_get_token()
     uint32_t token_size;
 
     status = psa_crypto_init();
-    ASSERT_STATUS(status, PSA_SUCCESS);
     status = psa_attestation_inject_key(private_key_data,
                                         sizeof(private_key_data),
                                         PSA_KEY_TYPE_ECC_KEYPAIR(PSA_ECC_CURVE_SECP256R1),
@@ -105,21 +83,14 @@ static psa_status_t check_initial_attestation_get_token()
                                         sizeof(exported),
                                         &exported_length);
 
-    ASSERT_STATUS(status, PSA_SUCCESS);
-
     attest_err = psa_initial_attest_get_token_size(TEST_CHALLENGE_OBJ_SIZE,
                                                    &token_size);
-
-    ASSERT_STATUS(attest_err, PSA_ATTEST_ERR_SUCCESS);
 
     attest_err = psa_initial_attest_get_token(challenge_buffer,
                                               TEST_CHALLENGE_OBJ_SIZE,
                                               token_buffer,
                                               &token_size);
 
-    ASSERT_STATUS(attest_err, PSA_ATTEST_ERR_SUCCESS);
-
-exit:
     if(attest_err != PSA_ATTEST_ERR_SUCCESS)
         return attest_err;
     return status;
@@ -129,10 +100,13 @@ static void attestation_example(void)
 {
     psa_status_t status;
 
-    mbedtls_printf("Get attestation token:\n");
+    printf("Get attestation token:\n");
     status = check_initial_attestation_get_token();
     if (status == PSA_SUCCESS) {
-        mbedtls_printf("\tsuccess!\n");
+        printf("\tsuccess!\n");
+    }
+    else {
+        printf("\tfailed!\n");
     }
 }
 
@@ -159,7 +133,7 @@ static void fake_set_initial_nvseed(void)
     if (status) {
         /* The device may already have an NV Seed injected, or another error
          * may have happened during injection. */
-        mbedtls_printf("warning (%d) - this attempt at entropy injection"
+        printf("warning (%d) - this attempt at entropy injection"
                        " failed\n", status);
     }
 }
