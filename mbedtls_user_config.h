@@ -25,8 +25,6 @@
 /* Enable the default implementation of the PSA entropy injection API if we are
  * building for an SPE. */
 #if defined(COMPONENT_PSA_SRV_IMPL) || defined(COMPONENT_PSA_SRV_EMUL)
-#   define MBEDTLS_ENTROPY_NV_SEED
-#   define MBEDTLS_NO_DEFAULT_ENTROPY_SOURCES
 #   define MBEDTLS_PSA_INJECT_ENTROPY
 #   define MBEDTLS_PLATFORM_NV_SEED_READ_MACRO mbed_default_seed_read
 #   define MBEDTLS_PLATFORM_NV_SEED_WRITE_MACRO mbed_default_seed_write
