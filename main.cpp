@@ -25,6 +25,7 @@
 #include <inttypes.h>
 #include "entropy.h"
 #include "entropy_poll.h"
+#include "mbedtls/version.h"
 
 #if defined(MBEDTLS_PLATFORM_C)
 #include "mbedtls/platform.h"
@@ -46,11 +47,12 @@
         }                                                                     \
     } while (0)
 
-#if !defined(MBEDTLS_PSA_CRYPTO_C)
+#if !defined(MBEDTLS_PSA_CRYPTO_C) || (MBEDTLS_VERSION_NUMBER < 0x02130000)
 int main(void)
 {
-    mbedtls_printf("Not all of the required options are defined:\n"
-                   "  - MBEDTLS_PSA_CRYPTO_C\n");
+    mbedtls_printf("Not all of the requirements are met:\n"
+                   "  - MBEDTLS_PSA_CRYPTO_C\n"
+                   "  - PSA Crypto API v1.0b3\n");
     return 0;
 }
 #else
