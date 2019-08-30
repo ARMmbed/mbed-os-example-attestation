@@ -25,6 +25,7 @@
 #include <inttypes.h>
 #include "entropy.h"
 #include "entropy_poll.h"
+#include "mbedtls/version.h"
 
 #if defined(MBEDTLS_PLATFORM_C)
 #include "mbedtls/platform.h"
@@ -46,11 +47,12 @@
         }                                                                     \
     } while (0)
 
-#if !defined(MBEDTLS_PSA_CRYPTO_C)
+#if !defined(MBEDTLS_PSA_CRYPTO_C) || (MBEDTLS_VERSION_NUMBER < 0x02130000)
 int main(void)
 {
-    mbedtls_printf("Not all of the required options are defined:\n"
-                   "  - MBEDTLS_PSA_CRYPTO_C\n");
+    mbedtls_printf("Not all of the requirements are met:\n"
+                   "  - MBEDTLS_PSA_CRYPTO_C\n"
+                   "  - PSA Crypto API v1.0b3\n");
     return 0;
 }
 #else
@@ -81,7 +83,7 @@ static psa_status_t check_initial_attestation_get_token()
     ASSERT_STATUS(status, PSA_SUCCESS);
     status = psa_attestation_inject_key(NULL,
                                         0,
-                                        PSA_KEY_TYPE_ECC_KEYPAIR(PSA_ECC_CURVE_SECP256R1),
+                                        PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_CURVE_SECP256R1),
                                         exported,
                                         sizeof(exported),
                                         &exported_length);
@@ -119,12 +121,11 @@ static void attestation_example(void)
 
 int main(void)
 {
-    const psa_key_id_t key_id = PSA_ATTESTATION_PRIVATE_KEY_ID;
-    psa_key_handle_t handle = 0;
+    psa_key_handle_t handle;
     
     attestation_example();
 
-    psa_open_key(PSA_KEY_LIFETIME_PERSISTENT, key_id, &handle);
+    psa_open_key(PSA_ATTESTATION_PRIVATE_KEY_ID, &handle);
     psa_destroy_key(handle);
     mbedtls_psa_crypto_free();
     return 0;
