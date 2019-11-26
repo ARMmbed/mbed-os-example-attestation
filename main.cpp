@@ -18,6 +18,7 @@
 #define __STDC_FORMAT_MACROS
 #endif
 
+#include "mbed.h"
 #include "psa_initial_attestation_api.h"
 #include "psa_attest_inject_key.h"
 #include <stdlib.h>
