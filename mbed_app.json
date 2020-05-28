@@ -3,6 +3,7 @@
         "*": {
              "platform.stdio-convert-newlines": true,
              "target.extra_labels_add": ["PSA"],
+             "target.features_add" : ["EXPERIMENTAL_API"],
              "target.components_remove": ["SD"]
         }
     },
