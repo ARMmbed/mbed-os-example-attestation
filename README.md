@@ -1,3 +1,4 @@
+![](./resources/official_armmbed_example_badge.png)
 # Running PSA Attestation examples on Mbed OS
 This repository contains an example demonstrating the compilation and use of PSA Attestation on Mbed OS.
 
